@@ -36,6 +36,7 @@ export function placeRandomNodes(
     gridRow.push(gridColumn);
   }
 
+  //Build Paths
   for (let rowi = 0; rowi < gridSize.x; rowi++) {
     for (let columni = 0; columni < gridSize.y; columni++) {
       if (getTileType(rowi, columni, gridRow)) {

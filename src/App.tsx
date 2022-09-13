@@ -4,14 +4,15 @@ import { DungeonGrid } from './components/DungeonGrid';
 import { IPlayer } from './interface/IPlayer';
 import { IGridItem } from './interface/IGridItem';
 import { IGridSize } from './interface/IGridSize';
-import { replaceWalkable } from './helpers/replaceWalkable';
+import { revealPath } from './helpers/revealPath';
 import Lives from './components/Lives';
+import Gold from './components/Gold';
 import Battle from './components/Battle';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import { defaultPlayerVars } from './const';
-
 import { placeRandomNodes } from './helpers/placeRandomNodes';
+import { useStyles } from './styles';
 //Does this need to be Global Scope?
 
 function App() {
@@ -26,43 +27,28 @@ function App() {
   const [player, setPlayer] = useState<IPlayer>(defaultPlayerVars);
   //Yes: The map needs to be redrawn
   const [gridSize, setGridSize] = useState<IGridSize>({ x: 20, y: 20 });
-  //Maybe: Monsters need to be redrawn
+  //Maybe: Monsters need to be redrawn after battle
   const [monsterArr, setMonsterArr] = useState<number[][]>([]);
+
+  const classes = useStyles();
 
   useEffect(() => {
     let gridRow: IGridItem[][] = [];
     let monsterArrTemp: number[][] = [];
 
-    placeRandomNodes(gridSize, nbrNodes, monsterArrTemp, gridRow);
-    replaceWalkable([player.pos.x, player.pos.y], gridRow);
+    //Prevent the map being redrawn on every refresh
     if (loadedMap.length === 0) {
+      placeRandomNodes(gridSize, nbrNodes, monsterArrTemp, gridRow);
+      revealPath([player.pos.x, player.pos.y], gridRow);
       setMapLoaded(gridRow);
     }
   }, [nbrNodes, player, loadedMap]);
 
   return (
     <ThemeProvider theme={theme}>
-      <div
-        className="App"
-        style={{
-          display: 'flex',
-          background: '#353b45',
-          height: '100vh',
-          width: '100vw',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              display: 'flex',
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              zIndex: 0,
-            }}
-          >
+      <div className={classes.root}>
+        <div className={classes.flexColumn}>
+          <div className={classes.optionWrapper}>
             <input
               value={nbrNodes}
               onChange={(e) => {
@@ -72,8 +58,11 @@ function App() {
             />
             <button onClick={() => setLos(los ? false : true)}>LOS</button>
           </div>
-          <Lives lives={player.lives} />
-          <Battle player={player} />
+          <div className={classes.flexRow}>
+            <Lives lives={player.lives} />
+            <Battle player={player} gridRow={loadedMap} />
+            <Gold gold={player.gold} />
+          </div>
           <DungeonGrid
             player={player}
             setPlayer={setPlayer}

@@ -1,6 +1,6 @@
 import { IGridItem } from '../interface/IGridItem';
 
-export function replaceWalkable(coords: number[], gridRow: IGridItem[][]) {
+export function revealPath(coords: number[], gridRow: IGridItem[][]) {
   const sightRange = 3;
   for (let i1 = coords[0] - sightRange; i1 <= coords[0] + sightRange; i1++)
     for (let i2 = coords[1] - sightRange; i2 <= coords[1] + sightRange; i2++) {

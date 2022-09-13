@@ -1,15 +1,19 @@
 import { IGridItem } from '../interface/IGridItem';
+import { IGridItemDetails } from '../interface/IGridItemDetails';
 export function replaceNode(
   row: number,
   column: number,
-  gridRow: IGridItem[][]
+  gridRow: IGridItem[][],
+  item: IGridItemDetails | null
 ) {
-  const thisNode = { ...gridRow[row][column] };
-  gridRow[row].splice(column, 1, {
-    ...gridRow[row][column],
+  const gridRowClone = JSON.parse(JSON.stringify(gridRow));
+  const thisNode = { ...gridRowClone[row][column] };
+  gridRowClone[row].splice(column, 1, {
+    ...thisNode,
+    item: item,
     node: false,
     path: true,
-    walkable: false,
     color: thisNode.path === true ? '#ddd' : 'green',
   });
+  return gridRowClone;
 }

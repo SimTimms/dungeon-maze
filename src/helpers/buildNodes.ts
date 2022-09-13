@@ -14,7 +14,11 @@ export const buildNodes = (
   if (direction === ENUM_DIRECTION.Right) {
     for (let colA = yc + 1; colA < gridSize.y; colA++) {
       if (!gridRow[xc][colA].node) {
-        replaceNode(xc, colA, gridRow);
+        gridRow.splice(
+          0,
+          gridRow.length,
+          ...replaceNode(xc, colA, gridRow, null)
+        );
       }
       if (gridRow[xc][colA].node) {
         break;
@@ -24,7 +28,11 @@ export const buildNodes = (
   if (direction === ENUM_DIRECTION.Left) {
     for (let colA = yc - 1; colA > -1; colA--) {
       if (!gridRow[xc][colA].node) {
-        replaceNode(xc, colA, gridRow);
+        gridRow.splice(
+          0,
+          gridRow.length,
+          ...replaceNode(xc, colA, gridRow, null)
+        );
       }
       if (
         gridRow[xc][colA].node ||
@@ -38,7 +46,11 @@ export const buildNodes = (
   if (direction === ENUM_DIRECTION.Down) {
     for (let rowA = xc + 1; rowA < gridSize.x; rowA++) {
       if (!gridRow[rowA][yc].node) {
-        replaceNode(rowA, yc, gridRow);
+        gridRow.splice(
+          0,
+          gridRow.length,
+          ...replaceNode(rowA, yc, gridRow, null)
+        );
       }
       if (gridRow[rowA][yc].node) {
         break;
@@ -48,7 +60,11 @@ export const buildNodes = (
   if (direction === ENUM_DIRECTION.Up) {
     for (let rowA = xc - 1; rowA > -1; rowA--) {
       if (!gridRow[rowA][yc].node) {
-        replaceNode(rowA, yc, gridRow);
+        gridRow.splice(
+          0,
+          gridRow.length,
+          ...replaceNode(rowA, yc, gridRow, null)
+        );
       }
       if (gridRow[rowA][yc].node) {
         break;

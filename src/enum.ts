@@ -4,3 +4,11 @@ export enum ENUM_DIRECTION {
   Left,
   Right,
 }
+
+export enum ENUM_ITEMS {
+  Ore,
+  Coin,
+  Monster,
+  Sword,
+  DeadMonster,
+}
