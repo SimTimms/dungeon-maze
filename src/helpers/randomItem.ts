@@ -23,5 +23,9 @@ export function randomItem(
       value: Math.floor(Math.random() * 17 + 1),
     };
   }
-  return null;
+  return {
+    name: ENUM_ITEMS.Monster,
+    img: monster,
+    value: Math.floor(Math.random() * 17 + 1),
+  };
 }

@@ -4,4 +4,5 @@ export interface IPlayer {
   lives: number;
   battle: IBattle | null;
   gold: number;
+  ore: number;
 }

@@ -9,7 +9,7 @@ export function revealPath(coords: number[], gridRow: IGridItem[][]) {
         gridRow[i1].splice(i2, 1, {
           ...thisNode,
           walkable: true,
-          color: '#fff',
+          color: '#444',
         });
       }
     }

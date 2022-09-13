@@ -3,4 +3,5 @@ export const defaultPlayerVars = {
   lives: 5,
   battle: null,
   gold: 0,
+  ore: 0,
 };

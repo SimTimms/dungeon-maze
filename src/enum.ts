@@ -11,4 +11,5 @@ export enum ENUM_ITEMS {
   Monster,
   Sword,
   DeadMonster,
+  Room,
 }

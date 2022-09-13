@@ -2,29 +2,15 @@ import { useEffect } from 'react';
 import { IDungeonGrid } from '../interface/IDungeonGrid';
 import { IGridItem } from '../interface/IGridItem';
 import { IBattle } from '../interface/IBattle';
-import skull from '../assets/skull.png';
-import door from '../assets/door.png';
-import dice from '../assets/dice.png';
+import { skull, door, dice, floor, wall, playerImg } from '../assets';
 import { fightMonster } from '../helpers/fightMonster';
-import floor from '../assets/floor.png';
-import wall from '../assets/wall.png';
-import playerImg from '../assets/player.png';
 import { revealPath } from '../helpers/revealPath';
 import { checkIfInBattle } from '../helpers/checkIfInBattle';
 import { clickedTileIsInRange } from '../helpers/clickedTileIsInRange';
 import { pickUpItem } from '../helpers/pickUpItem';
 import { ENUM_ITEMS } from '../enum';
-const sightRange = 6;
-
-const surroundingTiles = (xi: number, yi: number) => {
-  let sightItems = [];
-  for (let i1 = xi - sightRange; i1 <= xi + sightRange; i1++) {
-    for (let i2 = yi - sightRange; i2 <= yi + sightRange; i2++) {
-      sightItems.push([i1, i2]);
-    }
-  }
-  return sightItems;
-};
+import { surroundingTiles } from '../helpers/surroundingTiles';
+import { PATHS } from '../assets/paths';
 
 const isInSight = (
   playerX: number,
@@ -32,7 +18,7 @@ const isInSight = (
   tileX: number,
   tileY: number
 ) => {
-  const tilesFound = surroundingTiles(playerX, playerY).map((item) => {
+  const tilesFound = surroundingTiles(playerX, playerY, 6).map((item) => {
     return item[0] === tileX && item[1] === tileY;
   });
   return tilesFound.filter((item) => item === true).length > 0 ? true : false;
@@ -45,6 +31,7 @@ export const DungeonGrid = ({
   setMapLoaded,
   los,
   monsterArr,
+  floorColor,
 }: IDungeonGrid): JSX.Element => {
   const weaponRange = 1;
 
@@ -108,7 +95,6 @@ export const DungeonGrid = ({
                 onClick={() => tileClick(item2, i2, index, monsterArr, gridRow)}
                 key={`grid_${index}`}
                 style={{
-                  border: '1px solid #444',
                   width: 32,
                   height: 32,
                   backgroundColor:
@@ -117,7 +103,7 @@ export const DungeonGrid = ({
                       : item2.node === true
                       ? item2.color
                       : item2.path === true
-                      ? '#fff'
+                      ? 'rgba(0,0,0,0)'
                       : '#444',
                   backgroundImage: !item2.walkable
                     ? ''
@@ -134,7 +120,7 @@ export const DungeonGrid = ({
                     : item2.node
                     ? `url(${skull})`
                     : item2.path
-                    ? `url(${floor})`
+                    ? `url(${item2.pathImg})`
                     : `url(${wall})`,
                   backgroundSize:
                     item2.path &&
@@ -155,9 +141,42 @@ export const DungeonGrid = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  filter:
+                    item2.path && !item2.item && floorColor === '#67c8f2'
+                      ? 'hue-rotate(150deg)'
+                      : item2.path && !item2.item && floorColor === '#b2c0f2'
+                      ? 'hue-rotate(220deg)'
+                      : '',
                 }}
               >
-                {item2.item !== null && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: 32,
+                    height: 32,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundImage:
+                      item2.item && item2.item.layer
+                        ? `url(${item2.item.layer})`
+                        : item2.path
+                        ? `url(${item2.layer})`
+                        : '',
+                  }}
+                ></div>
+                {item2.item && item2.item.lighting && (
+                  <div
+                    style={{
+                      width: 1,
+                      height: 1,
+                      boxShadow: item2.item.lighting,
+                    }}
+                  ></div>
+                )}
+                {item2.item !== null && item2.item.value !== null && (
                   <div
                     style={{
                       position: 'absolute',

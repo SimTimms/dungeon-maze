@@ -14,16 +14,20 @@ export function pickUpItem(
   }
 
   const itemInGrid = gridRow[coords[0]][coords[1]];
-  const newValue = { ...player };
+  const playerClone = { ...player };
   if (itemInGrid.item) {
     switch (itemInGrid.item.name) {
       case ENUM_ITEMS.Ore:
+        playerClone['ore'] =
+          player.ore + ((itemInGrid.item && itemInGrid.item.value) || 0);
+        break;
+
+      case ENUM_ITEMS.Coin:
+        playerClone['gold'] =
+          player.gold + ((itemInGrid.item && itemInGrid.item.value) || 0);
         break;
     }
   }
-  setPlayer({
-    ...player,
-    gold: player.gold + ((itemInGrid.item && itemInGrid.item.value) || 0),
-  });
+  setPlayer(playerClone);
   removeItem();
 }

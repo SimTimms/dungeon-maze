@@ -7,4 +7,5 @@ export interface IDungeonGrid {
   los: boolean;
   monsterArr: number[][];
   setMapLoaded: (props: IGridItem[][]) => void;
+  floorColor: string;
 }
